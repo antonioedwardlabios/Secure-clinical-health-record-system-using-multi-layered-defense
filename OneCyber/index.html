@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OneCyber Clinic Service</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:       #0b1d3a;
+      --navy-deep:  #061224;
+      --blue:       #1c5fdb;
+      --blue-mid:   #2d6fe8;
+      --blue-light: #4f89f5;
+      --blue-pale:  #eef4ff;
+      --teal:       #0891b2;
+      --green:      #059669;
+      --green-pale: #ecfdf5;
+      --red:        #dc2626;
+      --red-pale:   #fff1f2;
+      --amber:      #d97706;
+      --amber-pale: #fffbeb;
+      --g0:  #ffffff;
+      --g50: #f8fafc;
+      --g100:#f1f5f9;
+      --g200:#e2e8f0;
+      --g300:#cbd5e1;
+      --g400:#94a3b8;
+      --g500:#64748b;
+      --g600:#475569;
+      --g700:#334155;
+      --g800:#1e293b;
+      --g900:#0f172a;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,.1), 0 4px 12px rgba(0,0,0,.06);
+      --shadow-xl: 0 24px 64px rgba(0,0,0,.13), 0 8px 24px rgba(0,0,0,.07);
+      --r3: 3px; --r6: 6px; --r10: 10px; --r14: 14px; --r20: 20px;
+    }
+
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+body { font-family:'Inter',sans-serif; background:var(--g50); color:var(--g800); line-height:1.6; min-height:100vh; display:flex; flex-direction:column; }
+
+.screen {
+  display:none;
+  min-height:100vh;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  flex-direction:column;
+}
+.screen.active { display:flex; }
+
+.auth-bg {
+  background:
+    radial-gradient(ellipse 70% 55% at 70% -10%, rgba(28,95,219,.13) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 5% 110%,  rgba(8,145,178,.09) 0%, transparent 55%),
+    var(--g50);
+}
+
+.auth-card {
+  background:var(--g0);
+  border:1px solid var(--g200);
+  border-radius:var(--r20);
+  box-shadow:var(--shadow-xl);
+  padding:48px 44px 40px;
+  width:100%;
+  max-width:420px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.auth-card::before {
+  content:'';
+  position:absolute;
+  inset:0 0 auto 0;
+  height:3px;
+  background:linear-gradient(90deg,var(--blue),var(--teal));
+}
+
+.brand-mark {
+  width:64px; height:64px;
+  margin:0 auto 22px;
+  border-radius:var(--r14);
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--blue-pale);
+}
+.brand-mark img {
+  width:100%; height:100%; object-fit:contain;
+}
+.brand-mark-fallback {
+  width:64px; height:64px;
+  margin:0 auto 22px;
+  border-radius:var(--r14);
+  background:linear-gradient(135deg,var(--blue),var(--teal));
+  display:flex; align-items:center; justify-content:center;
+}
+.brand-mark-fallback svg { width:30px; height:30px; fill:white; }
+
+.auth-card h1 {
+  font-size:21px; font-weight:700;
+  color:var(--navy); letter-spacing:-.4px;
+  margin-bottom:6px;
+}
+.auth-card .subtitle {
+  font-size:13.5px; color:var(--g500);
+  margin-bottom:32px; font-weight:400;
+}
+
+.input-field {
+  width:100%; padding:11px 14px;
+  border:1.5px solid var(--g200);
+  border-radius:var(--r6);
+  font-size:14px; font-family:'Inter',sans-serif;
+  color:var(--g800); background:var(--g0);
+  transition:border-color .15s, box-shadow .15s;
+  outline:none;
+}
+.input-field::placeholder { color:var(--g400); }
+.input-field:focus { border-color:var(--blue-light); box-shadow:0 0 0 3px rgba(79,137,245,.14); }
+.input-field.err { border-color:var(--red); }
+
+form input, form select, form textarea {
+  width:100%; padding:11px 14px;
+  border:1.5px solid var(--g200);
+  border-radius:var(--r6);
+  font-size:14px; font-family:'Inter',sans-serif;
+  color:var(--g800); background:var(--g0);
+  transition:border-color .15s, box-shadow .15s;
+  outline:none;
+  -webkit-appearance:none;
+  appearance:none;
+}
+form input::placeholder, form textarea::placeholder { color:var(--g400); }
+form input:focus, form select:focus, form textarea:focus {
+  border-color:var(--blue-light);
+  box-shadow:0 0 0 3px rgba(79,137,245,.14);
+}
+form input.field-error, form select.field-error, form textarea.field-error { border-color:var(--red); }
+form textarea { resize:vertical; }
+form select {
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 13px center;
+  padding-right:36px;
+  cursor:pointer;
+}
+
+button { cursor:pointer; font-family:'Inter',sans-serif; border:none; }
+
+.btn-primary {
+  width:100%; padding:12.5px;
+  background:linear-gradient(145deg,var(--blue-mid),#1748b8);
+  color:white; border:none; border-radius:var(--r6);
+  font-size:14.5px; font-weight:600; letter-spacing:.1px;
+  transition:filter .15s, transform .1s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.btn-primary:hover:not(:disabled) { filter:brightness(1.08); transform:translateY(-1px); }
+.btn-primary:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+
+.btn-google {
+  width:100%; padding:12px;
+  background:var(--g0); border:1.5px solid var(--g200);
+  color:var(--g700); font-size:14.5px; font-weight:600;
+  border-radius:var(--r6);
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  transition:border-color .15s, background .15s, box-shadow .15s;
+}
+.btn-google:hover { background:var(--g50); border-color:var(--g300); box-shadow:var(--shadow-sm); }
+.btn-google img { width:20px; height:20px; }
+
+.auth-input-group { margin-bottom:12px; }
+
+#dashboard { display:none; flex-direction:column; min-height:100vh; padding:0; align-items:stretch; justify-content:flex-start; }
+#dashboard.active { display:flex; }
+
+.topbar {
+  background:var(--navy);
+  height:62px; padding:0 32px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; position:sticky; top:0; z-index:200;
+  box-shadow:0 1px 0 rgba(255,255,255,.04), 0 2px 20px rgba(0,0,0,.25);
+}
+
+.topbar-brand { display:flex; align-items:center; gap:11px; }
+.topbar-logo {
+  width:32px; height:32px; border-radius:7px; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.08);
+  flex-shrink:0;
+}
+.topbar-logo img { width:100%; height:100%; object-fit:contain; }
+.topbar-logo-fallback {
+  width:32px; height:32px; border-radius:7px;
+  background:linear-gradient(135deg,var(--blue-light),var(--teal));
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.topbar-logo-fallback svg { width:16px; height:16px; fill:white; }
+.topbar-title { font-size:15px; font-weight:700; color:white; letter-spacing:-.2px; white-space:nowrap; }
+.topbar-divider { width:1px; height:18px; background:rgba(255,255,255,.12); flex-shrink:0; }
+.topbar-subtitle { font-size:12px; color:rgba(255,255,255,.45); white-space:nowrap; }
+
+.topbar-right { display:flex; align-items:center; gap:12px; }
+
+.admin-chip {
+  display:flex; align-items:center; gap:9px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:8px; padding:5px 12px 5px 8px;
+}
+.admin-avatar {
+  width:26px; height:26px; border-radius:50%;
+  background:linear-gradient(135deg,var(--blue-light),var(--teal));
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; color:white; flex-shrink:0;
+}
+.admin-name { font-size:13px; font-weight:600; color:white; line-height:1.2; }
+.admin-email { font-size:11px; color:rgba(255,255,255,.45); font-family:'JetBrains Mono',monospace; }
+
+.btn-logout {
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.8);
+  padding:7px 16px; border-radius:var(--r6);
+  font-size:13px; font-weight:500;
+  transition:background .15s, color .15s;
+  white-space:nowrap;
+}
+.btn-logout:hover { background:rgba(220,53,69,.55); border-color:transparent; color:white; }
+
+.banner-rate {
+  display:none; position:fixed; top:0; left:0; right:0; z-index:9999;
+  background:#991b1b; color:white;
+  padding:13px 32px; text-align:center;
+  font-size:14px; font-weight:700;
+  box-shadow:0 4px 16px rgba(0,0,0,.3);
+}
+
+.banner-anomaly {
+  background:#78350f; color:#fde68a;
+  padding:10px 32px; text-align:center;
+  font-size:13px; font-weight:600; display:none;
+}
+.banner-anomaly.show { display:block; }
+
+.page-body {
+  flex:1; padding:32px;
+  max-width:1300px; margin:0 auto; width:100%;
+}
+
+.card {
+  background:var(--g0);
+  border:1px solid var(--g200);
+  border-radius:var(--r14);
+  box-shadow:var(--shadow-md);
+  margin-bottom:24px;
+  overflow:hidden;
+}
+
+.card-header {
+  padding:20px 28px;
+  border-bottom:1px solid var(--g100);
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:12px;
+}
+.card-header-left { display:flex; align-items:center; gap:10px; }
+
+.icon-box {
+  width:34px; height:34px;
+  background:var(--blue-pale);
+  border-radius:8px;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.icon-box svg { width:17px; height:17px; fill:var(--blue); }
+
+.card-title { font-size:16px; font-weight:700; color:var(--navy); letter-spacing:-.2px; }
+.card-subtitle { font-size:12.5px; color:var(--g500); margin-top:1px; }
+
+.card-body { padding:28px; }
+
+.form-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+@media(max-width:1040px){ .form-grid { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:600px){  .form-grid { grid-template-columns:1fr; } }
+.span-full { grid-column:1/-1; }
+
+.form-divider { grid-column:1/-1; height:1px; background:var(--g100); margin:6px 0; }
+.form-section-label {
+  grid-column:1/-1;
+  font-size:10.5px; font-weight:700; letter-spacing:1px;
+  text-transform:uppercase; color:var(--g400); padding-top:2px;
+}
+
+.form-group label {
+  display:block; margin-bottom:6px;
+  font-size:13px; font-weight:500; color:var(--g600);
+}
+.req { color:var(--red); margin-left:2px; }
+.field-hint { font-size:11.5px; color:var(--g400); margin-top:4px; }
+.field-err  { font-size:11.5px; color:var(--red);  margin-top:4px; display:none; }
+.field-err.show { display:block; }
+
+.btn-submit {
+  margin-top:22px;
+  padding:12px 28px;
+  background:linear-gradient(145deg,var(--blue-mid),#1748b8);
+  color:white; border:none; border-radius:var(--r6);
+  font-size:14px; font-weight:600;
+  display:inline-flex; align-items:center; gap:8px;
+  transition:filter .15s, transform .1s;
+}
+.btn-submit:hover:not(:disabled) { filter:brightness(1.08); transform:translateY(-1px); }
+.btn-submit:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+
+#addResult { margin-top:12px; font-size:13px; min-height:18px; }
+
+.controls-bar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+.search-input {
+  flex:1; min-width:200px; max-width:280px;
+  padding:9px 14px;
+  border:1.5px solid var(--g200);
+  border-radius:var(--r6);
+  font-size:13.5px; font-family:'Inter',sans-serif;
+  color:var(--g800); background:var(--g0);
+  outline:none;
+}
+.search-input:focus { border-color:var(--blue-light); box-shadow:0 0 0 3px rgba(79,137,245,.14); }
+
+.sort-select {
+  padding:9px 36px 9px 13px;
+  border:1.5px solid var(--g200);
+  border-radius:var(--r6);
+  font-size:13.5px; font-family:'Inter',sans-serif;
+  color:var(--g700); background:var(--g0);
+  outline:none; cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 12px center;
+}
+
+.toggle-archived {
+  display:flex; align-items:center; gap:7px;
+  font-size:13px; color:var(--g500); cursor:pointer; user-select:none; white-space:nowrap;
+}
+
+.btn-export {
+  padding:9px 18px;
+  background:var(--green); color:white; border:none;
+  border-radius:var(--r6); font-size:13px; font-weight:600;
+  display:flex; align-items:center; gap:6px;
+}
+
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:13.5px; }
+thead tr { background:var(--g50); }
+th {
+  padding:11px 16px;
+  text-align:left; white-space:nowrap;
+  font-size:11px; font-weight:700; letter-spacing:.6px;
+  text-transform:uppercase; color:var(--g400);
+  border-bottom:1px solid var(--g200);
+}
+td {
+  padding:14px 16px;
+  border-bottom:1px solid var(--g100);
+  color:var(--g600); vertical-align:middle;
+}
+tbody tr:hover { background:#f7faff; }
+.td-name { font-weight:600; color:var(--g800); }
+.td-date { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--g400); }
+tr.row-archived { opacity:.45; }
+
+.badge {
+  display:inline-flex; align-items:center;
+  padding:2px 10px; border-radius:20px;
+  font-size:11.5px; font-weight:600; white-space:nowrap;
+}
+.badge-general      { background:#eef4ff; color:#1748b8; }
+.badge-followup     { background:#f0fdf4; color:#166534; }
+.badge-consultation { background:#faf5ff; color:#6d28d9; }
+.badge-emergency    { background:#fff1f2; color:#be123c; }
+.badge-vaccination  { background:#fff7ed; color:#c2410c; }
+.badge-default      { background:var(--g100); color:var(--g500); }
+
+.row-actions { display:flex; gap:6px; align-items:center; }
+.btn-row {
+  padding:5px 13px; border:none; border-radius:5px;
+  font-size:12px; font-weight:600;
+  transition:filter .15s, transform .1s;
+}
+.btn-row:hover:not(:disabled) { filter:brightness(.92); transform:translateY(-1px); }
+.btn-edit    { background:var(--blue-pale); color:var(--blue); }
+.btn-archive { background:var(--red-pale);  color:var(--red);  }
+.btn-restore { background:var(--green-pale); color:var(--green); }
+
+.empty-state {
+  padding:64px 24px; text-align:center; color:var(--g400);
+}
+.empty-state svg { width:38px; height:38px; fill:var(--g300); display:block; margin:0 auto 12px; }
+
+.audit-wrap { padding:0 28px 20px; border-top:1px solid var(--g100); }
+.audit-toggle-btn {
+  background:none; border:none; color:var(--blue);
+  font-size:13px; font-weight:600;
+  display:flex; align-items:center; gap:7px;
+  padding:16px 0 0; cursor:pointer;
+}
+.audit-chevron { width:13px; height:13px; fill:var(--g400); margin-left:auto; transition:transform .2s; }
+.audit-toggle-btn.open .audit-chevron { transform:rotate(180deg); }
+.audit-list { display:none; padding-top:12px; }
+.audit-list.open { display:block; }
+.audit-row {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:7px 0; border-bottom:1px solid var(--g100);
+  font-size:12.5px;
+}
+.a-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+.a-dot.add     { background:var(--green); }
+.a-dot.edit    { background:var(--blue); }
+.a-dot.delete  { background:var(--red); }
+.a-dot.restore { background:var(--amber); }
+.a-action { color:var(--g700); font-weight:500; }
+.a-meta   { color:var(--g400); font-size:11.5px; font-family:'JetBrains Mono',monospace; margin-top:1px; }
+
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(11,29,58,.55);
+  backdrop-filter:blur(5px);
+  align-items:center; justify-content:center;
+  z-index:2000; padding:20px;
+}
+.modal-overlay.open { display:flex; }
+.modal-box {
+  background:var(--g0); border:1px solid var(--g200);
+  border-radius:var(--r20); width:100%; max-width:880px;
+  max-height:92vh; overflow-y:auto;
+  box-shadow:var(--shadow-xl);
+}
+.modal-header {
+  padding:24px 32px;
+  border-bottom:1px solid var(--g100);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.modal-title { font-size:17px; font-weight:700; color:var(--navy); letter-spacing:-.2px; }
+.modal-close {
+  background:var(--g100); border:none; color:var(--g500);
+  width:30px; height:30px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; transition:background .15s;
+}
+.modal-close:hover { background:var(--g200); color:var(--g700); }
+.modal-body { padding:28px 32px; }
+.modal-footer {
+  padding:20px 32px;
+  border-top:1px solid var(--g100);
+  display:flex; justify-content:flex-end; gap:10px;
+}
+.btn-cancel {
+  padding:10px 22px; background:var(--g100); color:var(--g700);
+  border:none; border-radius:var(--r6); font-size:13.5px; font-weight:600;
+}
+.btn-cancel:hover { background:var(--g200); }
+.btn-save {
+  padding:10px 22px;
+  background:linear-gradient(145deg,var(--blue-mid),#1748b8);
+  color:white; border:none; border-radius:var(--r6);
+  font-size:13.5px; font-weight:600;
+}
+
+.alert-box {
+  max-width:440px; text-align:center;
+  border-radius:var(--r20); padding:40px 36px;
+}
+.alert-icon-wrap {
+  width:52px; height:52px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 16px;
+}
+.alert-icon-wrap.info  { background:#eef4ff; }
+.alert-icon-wrap.info svg { fill:var(--blue); }
+.alert-icon-wrap.error { background:var(--red-pale); }
+.alert-icon-wrap.error svg { fill:var(--red); }
+.alert-icon-wrap.warn  { background:var(--amber-pale); }
+.alert-icon-wrap.warn svg { fill:var(--amber); }
+
+#alertMsg { font-size:14.5px; color:var(--g700); line-height:1.65; margin-bottom:22px; }
+
+.btn-ok {
+  width:100%; padding:11px;
+  background:linear-gradient(145deg,var(--blue-mid),#1748b8);
+  color:white; border:none; border-radius:var(--r6);
+  font-size:14px; font-weight:600;
+}
+
+.btn-switch-account {
+  width:100%; padding:11px; margin-top:10px;
+  background:var(--g100); color:var(--g700);
+  border:none; border-radius:var(--r6);
+  font-size:14px; font-weight:600;
+  transition:background .15s;
+}
+.btn-switch-account:hover { background:var(--g200); }
+
+.unauthorized-screen {
+  background:
+    radial-gradient(ellipse 70% 55% at 70% -10%, rgba(220,38,38,.08) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 5% 110%, rgba(220,38,38,.05) 0%, transparent 55%),
+    var(--g50);
+}
+
+.unauth-card {
+  background:var(--g0);
+  border:1px solid var(--g200);
+  border-radius:var(--r20);
+  box-shadow:var(--shadow-xl);
+  padding:48px 44px 40px;
+  width:100%;
+  max-width:440px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.unauth-card::before {
+  content:'';
+  position:absolute;
+  inset:0 0 auto 0;
+  height:3px;
+  background:linear-gradient(90deg,var(--red),#f97316);
+}
+
+.unauth-icon {
+  width:64px; height:64px;
+  margin:0 auto 22px;
+  border-radius:50%;
+  background:var(--red-pale);
+  display:flex; align-items:center; justify-content:center;
+}
+.unauth-icon svg { width:30px; height:30px; fill:var(--red); }
+
+.unauth-card h2 {
+  font-size:20px; font-weight:700;
+  color:#991b1b; letter-spacing:-.3px;
+  margin-bottom:10px;
+}
+.unauth-email-display {
+  display:inline-block;
+  background:var(--red-pale);
+  border:1px solid #fecaca;
+  border-radius:6px;
+  padding:6px 14px;
+  font-size:13px;
+  font-family:'JetBrains Mono',monospace;
+  color:#991b1b;
+  margin-bottom:16px;
+  word-break:break-all;
+}
+.unauth-card p {
+  font-size:13.5px; color:var(--g500);
+  margin-bottom:28px; line-height:1.65;
+}
+.btn-try-another {
+  width:100%; padding:12.5px;
+  background:linear-gradient(145deg,var(--blue-mid),#1748b8);
+  color:white; border:none; border-radius:var(--r6);
+  font-size:14.5px; font-weight:600; letter-spacing:.1px;
+  transition:filter .15s, transform .1s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  margin-bottom:10px;
+}
+.btn-try-another:hover { filter:brightness(1.08); transform:translateY(-1px); }
+.btn-try-another-secondary {
+  width:100%; padding:12px;
+  background:var(--g0); border:1.5px solid var(--g200);
+  color:var(--g700); font-size:14px; font-weight:600;
+  border-radius:var(--r6);
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  transition:border-color .15s, background .15s;
+}
+.btn-try-another-secondary:hover { background:var(--g50); border-color:var(--g300); }
+
+.spin { width:13px; height:13px; border:2px solid rgba(255,255,255,.35); border-top-color:white; border-radius:50%; animation:rot .55s linear infinite; flex-shrink:0; }
+@keyframes rot { to { transform:rotate(360deg); } }
+
+.site-footer {
+  background:var(--navy-deep);
+  border-top:1px solid rgba(255,255,255,.06);
+  padding:18px 32px;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  flex-wrap:wrap;
+}
+.footer-logo {
+  width:24px; height:24px; border-radius:5px; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.07);
+}
+.footer-text { font-size:12px; color:rgba(255,255,255,.4); text-align:center; }
+.footer-text strong { color:rgba(255,255,255,.65); font-weight:600; }
+
+@media(max-width:768px){
+  .topbar { padding:0 18px; }
+  .topbar-divider, .topbar-subtitle, .admin-chip { display:none; }
+  .page-body { padding:20px 16px; }
+  .card-body { padding:20px 18px; }
+  .modal-body { padding:20px 20px; }
+  .controls-bar { flex-direction:column; align-items:stretch; }
+}
+
+
+  </style>
+</head>
+<body>
+
+<div class="banner-rate" id="rateBanner">⛔ Too many requests — please wait a moment before trying again.</div>
+
+<div id="screenCode" class="screen auth-bg active">
+  <div class="auth-card">
+    <div class="brand-mark">
+      <img src="logoo.png" alt="OneCyber" onerror="this.parentElement.style.display='none'; document.getElementById('codeFallback').style.display='flex';">
+    </div>
+    <div class="brand-mark-fallback" id="codeFallback" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+    </div>
+    <h1>OneCyber Clinic Service</h1>
+    <p class="subtitle">Enter your authorization code to proceed</p>
+    <div class="auth-input-group">
+      <input class="input-field" type="password" id="codeInput" placeholder="Enter access code" autocomplete="off" maxlength="20">
+    </div>
+    <button class="btn-primary" id="codeBtn" onclick="submitCode()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+      Continue
+    </button>
+  </div>
+</div>
+
+<div id="screenLogin" class="screen auth-bg">
+  <div class="auth-card">
+    <div class="brand-mark">
+      <img src="logoo.png" alt="OneCyber" onerror="this.parentElement.style.display='none'; document.getElementById('loginFallback').style.display='flex';">
+    </div>
+    <div class="brand-mark-fallback" id="loginFallback" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+    </div>
+    <h1>Welcome back</h1>
+    <p class="subtitle">Sign in to <strong style="color:var(--navy)">OneCyber Clinic Service</strong></p>
+    <button class="btn-google" onclick="doLogin()">
+      <svg viewBox="0 0 24 24" width="20" height="20">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Continue with Google
+    </button>
+    <p style="margin-top:20px;font-size:12px;color:var(--g400)">Only authorized accounts may access this system.</p>
+  </div>
+</div>
+
+<div id="screenUnauthorized" class="screen unauthorized-screen">
+  <div class="unauth-card">
+    <div class="unauth-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 13H9V8h2v6zm0-8H9V4h2v2z"/></svg>
+    </div>
+    <h2>Access Denied</h2>
+    <div class="unauth-email-display" id="unauthEmailDisplay">—</div>
+    <p>This email address is not authorized to access <strong>OneCyber Clinic Service</strong>. Please sign in with an authorized account or contact your system administrator.</p>
+    <button class="btn-try-another" onclick="switchAccount()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+      Try a Different Account
+    </button>
+    <button class="btn-try-another-secondary" onclick="switchAccount()">
+      <svg viewBox="0 0 24 24" width="18" height="18">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Sign in with a Different Google Account
+    </button>
+  </div>
+</div>
+
+<div id="dashboard" class="screen">
+
+  <nav class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">
+        <img src="logoo.png" alt="" onerror="this.parentElement.style.display='none'; document.getElementById('tbFallback').style.display='flex';">
+      </div>
+      <div class="topbar-logo-fallback" id="tbFallback" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+      </div>
+      <span class="topbar-title">OneCyber</span>
+      <div class="topbar-divider"></div>
+      <span class="topbar-subtitle">Clinic Service</span>
+    </div>
+    <div class="topbar-right">
+      <div class="admin-chip" id="adminChip">
+        <div class="admin-avatar" id="adminAvatar">?</div>
+        <div>
+          <div class="admin-name" id="adminName">—</div>
+          <div class="admin-email" id="adminEmail">—</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Log out</button>
+    </div>
+  </nav>
+
+  <div class="banner-anomaly" id="bannerAnomaly"></div>
+
+  <div class="page-body">
+
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-header-left">
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24"><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+      </div>
+      <div>
+        <div class="card-title">Add Patient Record</div>
+        <div class="card-subtitle">Register a new patient consultation</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <form id="addForm" onsubmit="submitAddPatient(event)" novalidate>
+      <div class="form-grid">
+        <div class="form-section-label">Personal Information</div>
+        <div class="form-group">
+          <label>First Name<span class="req">*</span></label>
+          <input type="text" id="fFirstName" placeholder="e.g. Maria" maxlength="50">
+          <div class="field-err" id="fe-fFirstName">Required — letters only, max 50.</div>
+        </div>
+        <div class="form-group">
+          <label>Last Name<span class="req">*</span></label>
+          <input type="text" id="fLastName" placeholder="e.g. Santos" maxlength="50">
+          <div class="field-err" id="fe-fLastName">Required — letters only, max 50.</div>
+        </div>
+        <div class="form-group">
+          <label>Middle Initial</label>
+          <input type="text" id="fMiddle" maxlength="1" placeholder="A">
+          <div class="field-hint">One letter only</div>
+        </div>
+        <div class="form-group">
+          <label>Age<span class="req">*</span></label>
+          <input type="number" id="fAge" min="1" max="120" placeholder="35">
+          <div class="field-err" id="fe-fAge">Must be between 1 and 120.</div>
+        </div>
+        <div class="form-group">
+          <label>Gender<span class="req">*</span></label>
+          <select id="fGender">
+            <option value="">Select gender</option>
+            <option>Male</option><option>Female</option><option>Other</option>
+          </select>
+          <div class="field-err" id="fe-fGender">Please select a gender.</div>
+        </div>
+        <div class="form-group">
+          <label>Allergen</label>
+          <input type="text" id="fAllergen" placeholder="e.g. Penicillin" maxlength="200">
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="form-section-label">Consultation</div>
+        <div class="form-group">
+          <label>Consultation Type<span class="req">*</span></label>
+          <select id="fConsult">
+            <option value="">Select type</option>
+            <option>General Checkup</option><option>Follow-up</option>
+            <option>Consultation</option><option>Emergency</option><option>Vaccination</option>
+          </select>
+          <div class="field-err" id="fe-fConsult">Please select a type.</div>
+        </div>
+        <div class="form-group span-full">
+          <label>Description / Notes</label>
+          <textarea id="fDesc" rows="3" placeholder="Brief description of the visit…" maxlength="1000"></textarea>
+          <div class="field-hint">Max 1,000 characters</div>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="form-section-label">Contact Details</div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="fEmail" placeholder="patient@email.com" maxlength="100">
+          <div class="field-err" id="fe-fEmail">Enter a valid email address.</div>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="fPhone" placeholder="+63 912 345 6789" maxlength="20">
+          <div class="field-err" id="fe-fPhone">Enter a valid phone number.</div>
+        </div>
+        <div class="form-group span-full">
+          <label>Address</label>
+          <input type="text" id="fAddress" placeholder="Full home address" maxlength="300">
+        </div>
+      </div>
+      <button type="submit" class="btn-submit" id="btnAdd">Add Patient Record</button>
+    </form>
+    <p id="addResult"></p>
+  </div>
+
+  <div class="audit-wrap">
+    <button class="audit-toggle-btn" id="auditToggle" onclick="toggleAudit()">
+      <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21L13 11V8h-1z"/></svg>
+      Session Activity Log
+      <svg class="audit-chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+    </button>
+    <div class="audit-list" id="auditList">
+      <p style="color:var(--g400);font-size:13px;padding:4px 0 8px;">No activity recorded yet.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-header-left">
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+      </div>
+      <div>
+        <div class="card-title">Patient Records</div>
+        <div class="card-subtitle">View, search, and manage consultations</div>
+      </div>
+    </div>
+    <div class="controls-bar">
+      <input class="search-input" type="text" id="searchInput" placeholder="Search patients…" oninput="loadPatients()">
+      <select class="sort-select" id="sortSelect" onchange="loadPatients()">
+        <option value="createdAt">Newest first</option>
+        <option value="name">Sort by name</option>
+        <option value="age">Sort by age</option>
+      </select>
+      <label class="toggle-archived">
+        <input type="checkbox" id="showArchivedChk" onchange="loadPatients()">
+        Show archived
+      </label>
+      <button class="btn-export" onclick="doExport()">
+        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        Export
+      </button>
+    </div>
+  </div>
+  <div class="card-body" style="padding:0">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date Added</th>
+            <th>Patient Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Consultation</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="patientTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-logo">
+      <img src="logoo.png" alt="OneCyber" onerror="this.style.display='none'">
+    </div>
+    <p class="footer-text">
+      © <span id="footerYear"></span> <strong>OneCyber</strong> &nbsp;&middot;&nbsp; Affiliated by <strong>University of Iloilo</strong>
+    </p>
+  </footer>
+</div>
+
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">Edit Patient Record</span>
+      <button class="modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="editForm" onsubmit="submitEdit(event)" novalidate>
+        <input type="hidden" id="eDocId">
+        <div class="form-grid">
+          <div class="form-section-label">Personal Information</div>
+          <div class="form-group"><label>First Name<span class="req">*</span></label><input type="text" id="eFirstName" maxlength="50"><div class="field-err" id="fe-eFirstName">Required.</div></div>
+          <div class="form-group"><label>Last Name<span class="req">*</span></label><input type="text" id="eLastName" maxlength="50"><div class="field-err" id="fe-eLastName">Required.</div></div>
+          <div class="form-group"><label>Middle Initial</label><input type="text" id="eMiddle" maxlength="1"></div>
+          <div class="form-group"><label>Age<span class="req">*</span></label><input type="number" id="eAge" min="1" max="120"><div class="field-err" id="fe-eAge">Must be 1–120.</div></div>
+          <div class="form-group"><label>Gender</label>
+            <select id="eGender">
+              <option>Male</option><option>Female</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Allergen</label><input type="text" id="eAllergen" maxlength="200"></div>
+          <div class="form-divider"></div>
+          <div class="form-section-label">Consultation</div>
+          <div class="form-group"><label>Consultation Type</label>
+            <select id="eConsult">
+              <option>General Checkup</option><option>Follow-up</option>
+              <option>Consultation</option><option>Emergency</option><option>Vaccination</option>
+            </select>
+          </div>
+          <div class="form-group span-full"><label>Description / Notes</label><textarea id="eDesc" rows="3" maxlength="1000"></textarea></div>
+          <div class="form-divider"></div>
+          <div class="form-section-label">Contact Details</div>
+          <div class="form-group"><label>Email</label><input type="email" id="eEmail" maxlength="100"><div class="field-err" id="fe-eEmail">Invalid email.</div></div>
+          <div class="form-group"><label>Phone</label><input type="tel" id="ePhone" maxlength="20"></div>
+          <div class="form-group span-full"><label>Address</label><input type="text" id="eAddress" maxlength="300"></div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+      <button class="btn-save" id="btnSave" onclick="submitEdit(event)">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="alertModal">
+  <div class="modal-box alert-box">
+    <div class="alert-icon-wrap info" id="alertIconWrap">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+    </div>
+    <p id="alertMsg"></p>
+    <button class="btn-ok" onclick="closeAlert()">OK</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import {
+    getFirestore, collection, getDocs, query, orderBy, doc, getDoc, updateDoc
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import {
+    getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  const app = initializeApp({
+    apiKey: "AIzaSyC4Jdi3cxcIeOrPWxAfVeQNoWwc6IejrQo",
+  authDomain: "ehcs-afe1b.firebaseapp.com",
+  projectId: "ehcs-afe1b",
+  storageBucket: "ehcs-afe1b.firebasestorage.app",
+  messagingSenderId: "64554813207",
+  appId: "1:64554813207:web:f15e4a9f2ee40e857ad952"
+  });
+
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const gp = new GoogleAuthProvider();
+  gp.setCustomParameters({ prompt: 'select_account' });
+
+  let currentUser = null;
+  let isAuthorized = false;
+
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+  const esc = s => s == null ? '' : String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+
+  const _rl = {};
+  function rateLimit(key, max, winMs) {
+    const now = Date.now();
+    _rl[key] = (_rl[key] || []).filter(t => now - t < winMs);
+    if (_rl[key].length >= max) return false;
+    _rl[key].push(now); return true;
+  }
+  function showRateBanner(sec=30) {
+    const b = document.getElementById('rateBanner');
+    b.style.display = 'block';
+    setTimeout(() => b.style.display = 'none', sec * 1000);
+  }
+
+  const MAX_BYTES = 50 * 1024;
+  function sizeOk(data) {
+    return new TextEncoder().encode(JSON.stringify(data)).length <= MAX_BYTES;
+  }
+
+  const _audit = [];
+  function logAudit(action, type = 'add') {
+    _audit.unshift({ action, type, user: currentUser?.email || 'unknown', time: new Date() });
+    _renderAudit();
+  }
+  function _renderAudit() {
+    const el = document.getElementById('auditList');
+    if (!_audit.length) {
+      el.innerHTML = '<p style="color:var(--g400);font-size:13px;padding:4px 0 8px;">No activity recorded yet.</p>';
+      return;
+    }
+    el.innerHTML = _audit.slice(0, 30).map(e => `
+      <div class="audit-row">
+        <span class="a-dot ${esc(e.type)}"></span>
+        <div>
+          <div class="a-action">${esc(e.action)}</div>
+          <div class="a-meta">${esc(e.user)} &middot; ${e.time.toLocaleTimeString()}</div>
+        </div>
+      </div>`).join('');
+  }
+  window.toggleAudit = () => {
+    document.getElementById('auditList').classList.toggle('open');
+    document.getElementById('auditToggle').classList.toggle('open');
+  };
+
+  const AUTHORIZED_EMAILS = [
+    "anja.labios.ui@phinmaed.com",
+    "antonioedwardlabios841@gmail.com"	
+
+  ].map(email => email.toLowerCase().trim());
+
+  const NAME_RE = /^[a-zA-ZÀ-ÿ\s'\-.]{1,50}$/;
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const PHONE_RE = /^[\+\d\s\-()\[\]]{0,20}$/;
+  const INIT_RE = /^[a-zA-Z]?$/;
+  const V_GENDER = ['Male', 'Female', 'Other'];
+  const V_CONSULT = ['General Checkup', 'Follow-up', 'Consultation', 'Emergency', 'Vaccination'];
+
+  function validate(d, pfx = '') {
+    const errs = [];
+    if (!NAME_RE.test(d.firstName)) errs.push({ f: `${pfx}FirstName`, m: 'Invalid first name.' });
+    if (!NAME_RE.test(d.lastName)) errs.push({ f: `${pfx}LastName`, m: 'Invalid last name.' });
+    if (d.middleInitial && !INIT_RE.test(d.middleInitial)) errs.push({ f: `${pfx}Middle`, m: 'Single letter only.' });
+    if (!Number.isInteger(d.age) || d.age < 1 || d.age > 120) errs.push({ f: `${pfx}Age`, m: 'Age must be 1–120.' });
+    if (!V_GENDER.includes(d.gender)) errs.push({ f: `${pfx}Gender`, m: 'Select a gender.' });
+    if (!V_CONSULT.includes(d.consultationType)) errs.push({ f: `${pfx}Consult`, m: 'Select a type.' });
+    if (d.description?.length > 1000) errs.push({ f: `${pfx}Desc`, m: 'Max 1,000 chars.' });
+    if (d.email && !EMAIL_RE.test(d.email)) errs.push({ f: `${pfx}Email`, m: 'Invalid email.' });
+    if (d.phone && !PHONE_RE.test(d.phone)) errs.push({ f: `${pfx}Phone`, m: 'Invalid phone.' });
+    return errs;
+  }
+
+  function clearErrs() {
+    document.querySelectorAll('.field-err').forEach(e => e.classList.remove('show'));
+    document.querySelectorAll('.field-error').forEach(e => e.classList.remove('field-error'));
+  }
+  function showErrs(errs, pfx = '') {
+    errs.forEach(({ f, m }) => {
+      const err = document.getElementById(`fe-${pfx}${f}`) || document.getElementById(`fe-${f}`);
+      const inp = document.getElementById(`${pfx}${f}`) || document.getElementById(f);
+      if (inp) inp.classList.add('field-error');
+      if (err) { err.textContent = m; err.classList.add('show'); }
+    });
+  }
+
+  let _busy = false;
+  function lockBtn(id, lbl) {
+    _busy = true;
+    const b = document.getElementById(id);
+    if (b) { b.disabled = true; b.innerHTML = `<span class="spin"></span> ${lbl}`; }
+  }
+  function unlockBtn(id, lbl) {
+    _busy = false;
+    const b = document.getElementById(id);
+    if (b) { b.disabled = false; b.textContent = lbl; }
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function showAlert(msg, type = 'info') {
+    document.getElementById('alertMsg').textContent = msg;
+    const w = document.getElementById('alertIconWrap');
+    w.className = `alert-icon-wrap ${type}`;
+    document.getElementById('alertModal').classList.add('open');
+  }
+  window.closeAlert = () => document.getElementById('alertModal').classList.remove('open');
+
+  window.submitCode = () => {
+    const v = document.getElementById('codeInput').value.trim();
+    if (v === '1234') {
+      showScreen('screenLogin');
+    } else {
+      showAlert('Incorrect code. Please try again.', 'error');
+      document.getElementById('codeInput').value = '';
+    }
+  };
+
+  window.doLogin = async () => {
+    try { await signInWithPopup(auth, gp); }
+    catch { showAlert('Login failed. Please try again.', 'error'); }
+  };
+
+  window.switchAccount = async () => {
+    try {
+      await signOut(auth);
+      showScreen('screenLogin');
+    } catch {
+      showAlert('Could not switch accounts. Please try again.', 'error');
+    }
+  };
+
+  onAuthStateChanged(auth, async user => {
+    if (user) {
+      currentUser = user;
+      const userEmailLower = user.email.toLowerCase().trim();
+
+      isAuthorized = AUTHORIZED_EMAILS.includes(userEmailLower);
+
+      if (!isAuthorized) {
+        document.getElementById('unauthEmailDisplay').textContent = user.email;
+        showScreen('screenUnauthorized');
+        return;
+      }
+
+      const initials = (user.displayName || '?').split(' ').map(w => w[0] || '').join('').slice(0, 2).toUpperCase();
+      document.getElementById('adminAvatar').textContent = initials;
+      document.getElementById('adminName').textContent = user.displayName || 'Administrator';
+      document.getElementById('adminEmail').textContent = user.email;
+
+      logAudit('Session started', 'add');
+      showScreen('dashboard');
+      loadPatients();
+    }
+  });
+
+  window.doLogout = () => {
+    signOut(auth);
+    location.reload();
+  };
+
+  window.submitAddPatient = async e => {
+    e.preventDefault();
+    if (!isAuthorized) { doLogout(); return; }
+    if (_busy) return;
+    if (!rateLimit('add', 10, 60 * 1000)) {
+      showRateBanner(30);
+      showAlert("Too many submissions. Please slow down.", 'error');
+      return;
+    }
+
+    clearErrs();
+
+    const data = {
+      firstName: document.getElementById('fFirstName').value.trim(),
+      lastName: document.getElementById('fLastName').value.trim(),
+      middleInitial: document.getElementById('fMiddle').value.trim().toUpperCase(),
+      age: parseInt(document.getElementById('fAge').value, 10),
+      gender: document.getElementById('fGender').value,
+      consultationType: document.getElementById('fConsult').value,
+      description: document.getElementById('fDesc').value.trim(),
+      allergen: document.getElementById('fAllergen').value.trim(),
+      email: document.getElementById('fEmail').value.trim(),
+      phone: document.getElementById('fPhone').value.trim(),
+      address: document.getElementById('fAddress').value.trim()
+    };
+
+    const errs = validate(data, 'f');
+    if (errs.length) { showErrs(errs); return; }
+    if (!sizeOk(data)) { showAlert('Submission too large.', 'error'); return; }
+
+    lockBtn('btnAdd', 'Adding…');
+
+    try {
+      const token = await auth.currentUser.getIdToken();
+      const res = await fetch('/.netlify/functions/addPatient', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify(data)
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to add patient');
+      }
+
+      const result = await res.json();
+      const r = document.getElementById('addResult');
+      r.innerHTML = `<span style="color:#059669;font-weight:600;">✓ Patient record added successfully (ID: ${result.id})</span>`;
+
+      document.getElementById('addForm').reset();
+      clearErrs();
+      logAudit(`Added: ${esc(data.firstName)} ${esc(data.lastName)}`, 'add');
+      loadPatients();
+    } catch (err) {
+      console.error(err);
+      showAlert(err.message || 'Failed to add record. Please try again.', 'error');
+    } finally {
+      unlockBtn('btnAdd', 'Add Patient Record');
+    }
+  };
+
+  function bClass(t) {
+    if (!t) return 'badge-default';
+    const l = t.toLowerCase();
+    if (l.includes('general') || l.includes('checkup')) return 'badge-general';
+    if (l.includes('follow')) return 'badge-followup';
+    if (l.includes('consultation')) return 'badge-consultation';
+    if (l.includes('emergency')) return 'badge-emergency';
+    if (l.includes('vaccination')) return 'badge-vaccination';
+    return 'badge-default';
+  }
+
+  window.loadPatients = async () => {
+    const tbody = document.getElementById('patientTbody');
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:#94a3b8;font-size:13px;">Loading…</td></tr>`;
+
+    const search = document.getElementById('searchInput').value.toLowerCase().trim();
+    const sortOpt = document.getElementById('sortSelect').value;
+    const showArch = document.getElementById('showArchivedChk').checked;
+
+    let q;
+    if (sortOpt === 'name') q = query(collection(db, 'patients'), orderBy('lastName'));
+    else if (sortOpt === 'age') q = query(collection(db, 'patients'), orderBy('age'));
+    else q = query(collection(db, 'patients'), orderBy('createdAt', 'desc'));
+
+    try {
+      const snap = await getDocs(q);
+      tbody.innerHTML = '';
+      let cnt = 0;
+
+      snap.forEach(s => {
+        const d = s.data();
+        if (d.deleted && !showArch) return;
+
+        const name = isAuthorized ?
+          `${d.firstName || ''} ${d.middleInitial ? d.middleInitial + '. ' : ''}${d.lastName || ''}`.trim() :
+          'Unknown Patient';
+
+        const age = isAuthorized ? String(d.age ?? '—') : '—';
+        const gender = isAuthorized ? (d.gender || '—') : '—';
+        const consult = isAuthorized ? (d.consultationType || '') : 'Unknown';
+        const date = isAuthorized && d.createdAt ?
+          new Date(d.createdAt.toDate()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+
+        if (search && !name.toLowerCase().includes(search) && !age.includes(search) && !consult.toLowerCase().includes(search)) return;
+
+        const row = document.createElement('tr');
+        if (d.deleted) row.classList.add('row-archived');
+
+        const mk = (txt, cls) => {
+          const t = document.createElement('td');
+          if (cls) t.className = cls;
+          t.textContent = txt;
+          return t;
+        };
+
+        const bdgTd = document.createElement('td');
+        const bdg = document.createElement('span');
+        bdg.className = `badge ${bClass(consult)}`;
+        bdg.textContent = consult || '—';
+        bdgTd.appendChild(bdg);
+
+        const actTd = document.createElement('td');
+        const acts = document.createElement('div');
+        acts.className = 'row-actions';
+
+        if (!d.deleted && isAuthorized) {
+          const eb = document.createElement('button');
+          eb.className = 'btn-row btn-edit';
+          eb.textContent = 'Edit';
+          eb.onclick = () => openEdit(s.id);
+          acts.appendChild(eb);
+        }
+
+        const ab = document.createElement('button');
+        if (d.deleted) {
+          ab.className = 'btn-row btn-restore';
+          ab.textContent = 'Restore';
+          ab.onclick = () => restorePatient(s.id);
+        } else {
+          ab.className = 'btn-row btn-archive';
+          ab.textContent = 'Archive';
+          ab.onclick = () => archivePatient(s.id);
+        }
+        if (!isAuthorized) ab.disabled = true;
+        acts.appendChild(ab);
+        actTd.appendChild(acts);
+
+        row.appendChild(mk(date, 'td-date'));
+        row.appendChild(mk(name, 'td-name'));
+        row.appendChild(mk(age));
+        row.appendChild(mk(gender));
+        row.appendChild(bdgTd);
+        row.appendChild(actTd);
+        tbody.appendChild(row);
+        cnt++;
+      });
+
+      if (!cnt) {
+        const er = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 6;
+        td.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg><p>${search ? 'No patients match your search.' : 'No records found.'}</p></div>`;
+        er.appendChild(td);
+        tbody.appendChild(er);
+      }
+    } catch (err) {
+      if (err.code === 'permission-denied') {
+        showAlert('Access denied. You are not authorized to view records.', 'error');
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#dc2626;padding:32px;font-size:13px;font-weight:600;">Access Denied</td></tr>`;
+      } else {
+        showAlert('Failed to load records. Please try again.', 'error');
+      }
+    }
+  };
+
+  window.openEdit = async id => {
+    if (!isAuthorized) { doLogout(); return; }
+    if (!rateLimit('editOpen', 20, 60 * 1000)) { showRateBanner(15); return; }
+
+    try {
+      const snap = await getDoc(doc(db, 'patients', id));
+      if (snap.exists()) {
+        const d = snap.data();
+        document.getElementById('eDocId').value = id;
+        document.getElementById('eFirstName').value = d.firstName || '';
+        document.getElementById('eLastName').value = d.lastName || '';
+        document.getElementById('eMiddle').value = d.middleInitial || '';
+        document.getElementById('eAge').value = d.age || '';
+        document.getElementById('eGender').value = d.gender || 'Male';
+        document.getElementById('eConsult').value = d.consultationType || 'General Checkup';
+        document.getElementById('eDesc').value = d.description || '';
+        document.getElementById('eAllergen').value = d.allergen || '';
+        document.getElementById('eEmail').value = d.email || '';
+        document.getElementById('ePhone').value = d.phone || '';
+        document.getElementById('eAddress').value = d.address || '';
+        clearErrs();
+        document.getElementById('editModal').classList.add('open');
+      }
+    } catch {
+      showAlert('Failed to load patient data. Please try again.', 'error');
+    }
+  };
+
+  window.closeEditModal = () => document.getElementById('editModal').classList.remove('open');
+
+  window.submitEdit = async e => {
+    e.preventDefault();
+    if (!isAuthorized) { doLogout(); return; }
+    if (_busy) return;
+    if (!rateLimit('update', 15, 60 * 1000)) {
+      showRateBanner(20);
+      showAlert('Too many updates. Please wait.', 'error');
+      return;
+    }
+
+    clearErrs();
+    const id = document.getElementById('eDocId').value;
+    const data = {
+      firstName: document.getElementById('eFirstName').value.trim(),
+      lastName: document.getElementById('eLastName').value.trim(),
+      middleInitial: document.getElementById('eMiddle').value.trim().toUpperCase(),
+      age: parseInt(document.getElementById('eAge').value, 10),
+      gender: document.getElementById('eGender').value,
+      consultationType: document.getElementById('eConsult').value,
+      description: document.getElementById('eDesc').value.trim(),
+      allergen: document.getElementById('eAllergen').value.trim(),
+      email: document.getElementById('eEmail').value.trim(),
+      phone: document.getElementById('ePhone').value.trim(),
+      address: document.getElementById('eAddress').value.trim()
+    };
+
+    const errs = validate(data, 'e');
+    if (errs.length) { showErrs(errs, 'e'); return; }
+    if (!sizeOk(data)) { showAlert('Submission too large.', 'error'); return; }
+
+    lockBtn('btnSave', 'Saving…');
+    try {
+      await updateDoc(doc(db, 'patients', id), data);
+      logAudit(`Edited: ${esc(data.firstName)} ${esc(data.lastName)}`, 'edit');
+      showAlert('Record updated successfully.');
+      closeEditModal();
+      loadPatients();
+    } catch {
+      showAlert('Failed to update. Please try again.', 'error');
+    } finally {
+      unlockBtn('btnSave', 'Save Changes');
+    }
+  };
+
+  window.archivePatient = async id => {
+    if (!isAuthorized) { doLogout(); return; }
+    if (!rateLimit('archive', 10, 60 * 1000)) { showRateBanner(20); showAlert('Too many actions.', 'error'); return; }
+    if (!confirm('Archive this patient record? You can restore it later.')) return;
+
+    try {
+      await updateDoc(doc(db, 'patients', id), {
+        deleted: true,
+        deletedAt: new Date().toISOString(),
+        deletedBy: currentUser.email
+      });
+      logAudit(`Archived record …${id.slice(-6)}`, 'delete');
+      loadPatients();
+    } catch {
+      showAlert('Failed to archive. Please try again.', 'error');
+    }
+  };
+
+  window.restorePatient = async id => {
+    if (!isAuthorized) { doLogout(); return; }
+    if (!confirm('Restore this patient record?')) return;
+
+    try {
+      await updateDoc(doc(db, 'patients', id), {
+        deleted: false,
+        deletedAt: null,
+        deletedBy: null
+      });
+      logAudit(`Restored record …${id.slice(-6)}`, 'restore');
+      loadPatients();
+    } catch {
+      showAlert('Failed to restore. Please try again.', 'error');
+    }
+  };
+
+  window.doExport = async () => {
+    if (!isAuthorized) { doLogout(); return; }
+    if (!rateLimit('export', 3, 60 * 1000)) { showAlert('Export limit reached. Please wait.', 'error'); return; }
+
+    try {
+      const snap = await getDocs(collection(db, 'patients'));
+      let txt = 'ONECYBER CLINIC SERVICE — PATIENT RECORDS\n';
+      txt += `Generated: ${new Date().toLocaleString()}\nExported by: ${currentUser.email || 'unknown'}\n\n`;
+
+      snap.forEach(s => {
+        const d = s.data();
+        if (d.deleted) return;
+        const n = `${d.firstName || ''} ${d.middleInitial ? d.middleInitial + '. ' : ''}${d.lastName || ''}`;
+        txt += `Patient: ${n}\nAge: ${d.age}\nGender: ${d.gender || 'N/A'}\nConsultation: ${d.consultationType || 'N/A'}\nDescription: ${d.description || 'N/A'}\nAllergen: ${d.allergen || 'None'}\nEmail: ${d.email || 'N/A'}\nPhone: ${d.phone || 'N/A'}\nAddress: ${d.address || 'N/A'}\nDate Added: ${d.createdAt ? new Date(d.createdAt.toDate()).toLocaleString() : 'Unknown'}\n${'-'.repeat(44)}\n\n`;
+      });
+
+      logAudit('Exported records', 'edit');
+      const url = URL.createObjectURL(new Blob([txt], { type: 'text/plain' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'patient_records.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      showAlert('Failed to export. Please try again.', 'error');
+    }
+  };
+
+  document.getElementById('editModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('editModal')) closeEditModal();
+  });
+  document.getElementById('alertModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('alertModal')) closeAlert();
+  });
+
+  document.getElementById('codeInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') window.submitCode();
+  });
+</script>
+
+</body>
+</html>
